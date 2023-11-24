@@ -38,7 +38,7 @@ import Divider from '@mui/material/Divider';
 import { toHexString, shortenString } from '../../utils/helpers';
 import CopyToClipboard from '../../components/CopyToClipboard';
 
-function Inputs({ blockHeight }: { blockHeight: number }) {
+function Inputs({ blockHeight }: { blockHeight: string }) {
   const { data } = useGetBlockByHeight(blockHeight);
   const [expanded, setExpanded] = useState<string | false>(false);
   const theme = useTheme();

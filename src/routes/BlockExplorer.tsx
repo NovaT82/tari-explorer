@@ -27,8 +27,12 @@ import MempoolTable from './Mempool/MempoolTable';
 import VNTable from './VNs/VNTable';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
+import { useGetBlockByHeightOrHash } from '../api/hooks/useBlocks';
 
 function BlockExplorerPage() {
+  const { data: block } = useGetBlockByHeightOrHash(1);
+  console.log('block', block);
+
   return (
     <>
       <Grid item xs={12} md={12} lg={12}>

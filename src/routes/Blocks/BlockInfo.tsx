@@ -34,7 +34,7 @@ import {
 import CopyToClipboard from '../../components/CopyToClipboard';
 import { useTheme } from '@mui/material/styles';
 
-function BlockInfo({ blockHeight }: { blockHeight: number }) {
+function BlockInfo({ blockHeight }: { blockHeight: any }) {
   const { data, isLoading, error } = useGetBlockByHeight(blockHeight);
   const theme = useTheme();
   const { header } = data ?? {};

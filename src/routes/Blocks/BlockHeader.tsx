@@ -28,7 +28,7 @@ import Box from '@mui/material/Box';
 import { useTheme, styled } from '@mui/material/styles';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { Link, useLocation } from 'react-router-dom';
-import { useAllBlocks } from '../../api/hooks/useBlocks';
+import { useAllBlocks, useGetBlockByHeight } from '../../api/hooks/useBlocks';
 
 const StyledButton = styled(Button)(({ theme }) => ({
   color: theme.palette.text.primary,
@@ -40,32 +40,28 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 function BlockHeader() {
-  const theme = useTheme();
-  const [blockHeight, setBlockHeight] = useState(0);
-  const [prevDisabled, setPrevDisabled] = useState(false);
-  const [nextDisabled, setNextDisabled] = useState(false);
   const { pathname } = useLocation();
-  // const blockHeight = parseInt(pathname.split('/')[2]);
-  const { data: allBlocks } = useAllBlocks();
-  const tip = allBlocks?.tipInfo.metadata.height_of_longest_chain;
-  //   if (!data) return <div>Loading...</div>;
-  useEffect(() => {
-    const newBlockHeight = parseInt(pathname.split('/')[2]);
-    setBlockHeight(newBlockHeight);
-  }, [pathname]);
+  const heightOrHash = pathname.split('/')[2];
+  const { data, isLoading, error } = useGetBlockByHeight(heightOrHash);
+  const { data: tipInfo } = useAllBlocks();
+  const [nextDisabled, setNextDisabled] = useState(false);
+  const [prevDisabled, setPrevDisabled] = useState(false);
+  const theme = useTheme();
+  const tip = tipInfo?.tipInfo.metadata.height_of_longest_chain;
+  console.log('tipinfo', tipInfo);
 
   useEffect(() => {
-    if (blockHeight === 0) {
+    if (data?.height === 0) {
       setPrevDisabled(true);
     } else {
       setPrevDisabled(false);
     }
-    if (blockHeight >= tip) {
+    if (data?.height >= tip) {
       setNextDisabled(true);
     } else {
       setNextDisabled(false);
     }
-  }, [blockHeight, tip]);
+  }, [data?.height, tip]);
 
   return (
     <>
@@ -92,7 +88,7 @@ function BlockHeader() {
               fontSize: 60,
             }}
           >
-            {blockHeight}
+            {data?.height}
           </Typography>
         </Box>
       </Container>
@@ -118,7 +114,7 @@ function BlockHeader() {
               <StyledButton>All Blocks</StyledButton>
             </Link>
             <Box>
-              <Link to={`/blocks/${blockHeight - 1}`}>
+              <Link to={data?.prevLink}>
                 <StyledButton
                   startIcon={<ChevronLeft />}
                   disabled={prevDisabled}
@@ -129,7 +125,7 @@ function BlockHeader() {
               <Link to={`/blocks/${tip}`}>
                 <StyledButton>Tip</StyledButton>
               </Link>
-              <Link to={`/blocks/${blockHeight + 1}`}>
+              <Link to={data?.nextLink}>
                 <StyledButton
                   endIcon={<ChevronRight />}
                   disabled={nextDisabled}

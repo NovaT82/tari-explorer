@@ -189,7 +189,7 @@ function BlockTable() {
             <Grid item xs={12}>
               <Button
                 onClick={() => window.open(`/blocks/${block.height}`)}
-                variant="contained"
+                variant="outlined"
                 fullWidth
               >
                 View Block

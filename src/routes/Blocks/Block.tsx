@@ -35,8 +35,9 @@ import FetchStatusCheck from '../../components/FetchStatusCheck';
 function Block() {
   const theme = useTheme();
   const { pathname } = useLocation();
-  const blockHeight = parseInt(pathname.split('/')[2]);
+  const blockHeight = pathname.split('/')[2];
   const { isLoading, isError, error } = useGetBlockByHeight(blockHeight);
+
   if (isLoading || isError) {
     return (
       <Grid item xs={12} md={12} lg={12}>

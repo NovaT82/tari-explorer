@@ -131,10 +131,10 @@ const SearchField = () => {
     if (query === '') {
       return;
     }
-    if (parseInt(query) > tip) {
-      setQuery('');
-      return;
-    }
+    // if (parseInt(query) > tip) {
+    //   setQuery('');
+    //   return;
+    // }
     navigate(`/blocks/${query}`);
     setQuery('');
   };

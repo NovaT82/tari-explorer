@@ -39,12 +39,7 @@ function App() {
           <Route path="mempool" element={<MempoolPage />} />
           <Route path="vns" element={<VNPage />} />
         </Route>
-        <Route
-          path="blocks"
-          element={
-            <PageLayout title="Blocks" subTitle="All blocks in the chain" />
-          }
-        >
+        <Route path="blocks" element={<PageLayout title="Blocks" />}>
           <Route index element={<BlocksPage />} />
         </Route>
         <Route path="blocks/:blockHeight" element={<PageLayout blockHeader />}>

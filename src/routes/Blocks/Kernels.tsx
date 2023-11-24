@@ -41,7 +41,7 @@ import { toHexString, shortenString } from '../../utils/helpers';
 import CopyToClipboard from '../../components/CopyToClipboard';
 import GridItem from './GridItem';
 
-function Kernels({ blockHeight }: { blockHeight: number }) {
+function Kernels({ blockHeight }: { blockHeight: string }) {
   const { data } = useGetBlockByHeight(blockHeight);
   const [expanded, setExpanded] = useState<string | false>(false);
   const theme = useTheme();
