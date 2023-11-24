@@ -42,7 +42,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 function BlockHeader() {
   const { pathname } = useLocation();
   const heightOrHash = pathname.split('/')[2];
-  const { data, isLoading, error } = useGetBlockByHeight(heightOrHash);
+  const { data } = useGetBlockByHeight(heightOrHash);
   const { data: tipInfo } = useAllBlocks();
   const [nextDisabled, setNextDisabled] = useState(false);
   const [prevDisabled, setPrevDisabled] = useState(false);

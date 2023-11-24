@@ -31,8 +31,6 @@ import {
   Grid,
   Divider,
   ButtonGroup,
-  LinearProgress,
-  CircularProgress,
   Skeleton,
 } from '@mui/material';
 import {
@@ -53,10 +51,7 @@ function BlockTable() {
   const [blocksPerPage, setBlocksPerPage] = useState(10);
   const [page, setPage] = useState(1);
   const [firstHeight, setFirstHeight] = useState(tip || 0);
-  const { data, isFetching, isLoading } = useGetBlocksByParam(
-    firstHeight,
-    blocksPerPage
-  );
+  const { data } = useGetBlocksByParam(firstHeight, blocksPerPage);
   const [prevDisabled, setPrevDisabled] = useState(true);
   const [nextDisabled, setNextDisabled] = useState(false);
   const [selectedButton, setSelectedButton] = useState(10);
@@ -304,68 +299,68 @@ function BlockTable() {
       {isMobile ? <Mobile /> : <Desktop />}
 
       <Divider />
-      <Box
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: theme.spacing(1),
-          paddingTop: theme.spacing(2),
-          paddingBottom: theme.spacing(2),
-        }}
-      >
-        <Box
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: theme.spacing(1),
-          }}
+      <Grid container spacing={2} pl={2} pr={2} pb={2} pt={2}>
+        <Grid item xs={12} md={6}>
+          <Box
+            style={{
+              display: 'flex',
+              justifyContent: isMobile ? 'center' : 'flex-start',
+              alignItems: 'center',
+              gap: theme.spacing(1),
+            }}
+          >
+            <Typography variant="body2">Rows per page</Typography>
+            <ButtonGroup disableElevation variant="contained">
+              <Button
+                onClick={handleChange(10)}
+                style={
+                  selectedButton === 10
+                    ? { backgroundColor: theme.palette.primary.dark }
+                    : { backgroundColor: theme.palette.primary.main }
+                }
+              >
+                10
+              </Button>
+              <Button
+                onClick={handleChange(20)}
+                style={
+                  selectedButton === 20
+                    ? { backgroundColor: theme.palette.primary.dark }
+                    : { backgroundColor: theme.palette.primary.main }
+                }
+              >
+                20
+              </Button>
+              <Button
+                onClick={handleChange(50)}
+                style={
+                  selectedButton === 50
+                    ? { backgroundColor: theme.palette.primary.dark }
+                    : { backgroundColor: theme.palette.primary.main }
+                }
+              >
+                50
+              </Button>
+            </ButtonGroup>
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={6}
+          style={isMobile ? { textAlign: 'center' } : { textAlign: 'right' }}
         >
-          <Typography variant="body2">Rows per page</Typography>
-          <ButtonGroup disableElevation variant="contained">
-            <Button
-              onClick={handleChange(10)}
-              style={
-                selectedButton === 10
-                  ? { backgroundColor: theme.palette.primary.dark }
-                  : { backgroundColor: theme.palette.primary.main }
-              }
-            >
-              10
+          <ButtonGroup variant="contained" disableElevation>
+            <Button onClick={handlePreviousPage} disabled={prevDisabled}>
+              Previous
             </Button>
-            <Button
-              onClick={handleChange(20)}
-              style={
-                selectedButton === 20
-                  ? { backgroundColor: theme.palette.primary.dark }
-                  : { backgroundColor: theme.palette.primary.main }
-              }
-            >
-              20
-            </Button>
-            <Button
-              onClick={handleChange(50)}
-              style={
-                selectedButton === 50
-                  ? { backgroundColor: theme.palette.primary.dark }
-                  : { backgroundColor: theme.palette.primary.main }
-              }
-            >
-              50
+            <Button onClick={handleGoToTip}>Tip</Button>
+            <Button onClick={handleNextPage} disabled={nextDisabled}>
+              Next
             </Button>
           </ButtonGroup>
-        </Box>
-        <ButtonGroup variant="contained" disableElevation>
-          <Button onClick={handlePreviousPage} disabled={prevDisabled}>
-            Previous
-          </Button>
-          <Button onClick={handleGoToTip}>Tip</Button>
-          <Button onClick={handleNextPage} disabled={nextDisabled}>
-            Next
-          </Button>
-        </ButtonGroup>
-      </Box>
+        </Grid>
+      </Grid>
     </>
   );
 }

@@ -24,21 +24,15 @@ import { useState, Fragment } from 'react';
 import {
   InnerHeading,
   StyledAccordion,
-  TypographyData,
 } from '../../components/StyledComponents';
-import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useGetBlockByHeight } from '../../api/hooks/useBlocks';
-import { styled } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import Divider from '@mui/material/Divider';
 import { toHexString, shortenString } from '../../utils/helpers';
-import CopyToClipboard from '../../components/CopyToClipboard';
 import GridItem from './GridItem';
 
 function Kernels({ blockHeight }: { blockHeight: string }) {

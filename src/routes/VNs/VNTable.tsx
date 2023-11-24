@@ -20,50 +20,101 @@
 //  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 //  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import { Fragment } from 'react';
 import { useAllBlocks } from '../../api/hooks/useBlocks';
-import { DataTableCell, InnerHeading } from '../../components/StyledComponents';
 import {
-  TableContainer,
-  Table,
-  TableCell,
-  TableRow,
-  TableHead,
-  TableBody,
-} from '@mui/material';
+  InnerHeading,
+  TypographyData,
+} from '../../components/StyledComponents';
+import { Typography, Grid, Divider, Alert } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import FetchStatusCheck from '../../components/FetchStatusCheck';
 
 function VNTable() {
-  const { data } = useAllBlocks();
-  console.log('vns', data?.activeVns);
+  const { data, isError, isLoading } = useAllBlocks();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  function Mobile() {
+    const col1 = 4;
+    const col2 = 8;
+
+    return (
+      <Grid container spacing={2} pl={2} pr={2}>
+        {data?.activeVns.map((item: any, index: number) => (
+          <Fragment key={index}>
+            <Grid item xs={col1}>
+              <Typography variant="body2">Public Key</Typography>
+            </Grid>
+            <Grid item xs={col2}>
+              <TypographyData>Pubkey Data</TypographyData>
+            </Grid>
+
+            <Grid item xs={col1}>
+              <Typography variant="body2">Shard Key</Typography>
+            </Grid>
+            <Grid item xs={col2}>
+              <TypographyData>Shardkey Data</TypographyData>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider color={theme.palette.background.paper} />
+            </Grid>
+          </Fragment>
+        ))}
+      </Grid>
+    );
+  }
+
+  function Desktop() {
+    const col1 = 6;
+    const col2 = 6;
+
+    return (
+      <>
+        <Grid container spacing={2} pl={2} pr={2} pb={2} pt={2}>
+          <Grid item xs={col1} md={col1} lg={col1}>
+            <Typography variant="body2">Public Key</Typography>
+          </Grid>
+          <Grid item xs={col2} md={col2} lg={col2}>
+            <Typography variant="body2">Shard Key</Typography>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} pl={2} pr={2} pb={2}>
+          {data?.activeVns.map((item: any, index: number) => (
+            <Fragment key={index}>
+              <Grid item xs={12}>
+                <Divider color={theme.palette.background.paper} />
+              </Grid>
+              <Grid item xs={col1} md={col1} lg={col1}>
+                <TypographyData>Pubkey Data</TypographyData>
+              </Grid>
+              <Grid item xs={col2} md={col2} lg={col2}>
+                <TypographyData>Shardkey Data</TypographyData>
+              </Grid>
+            </Fragment>
+          ))}
+        </Grid>
+      </>
+    );
+  }
 
   return (
     <>
       <InnerHeading>Active Validator Nodes</InnerHeading>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Public Key</TableCell>
-              <TableCell>Shard Key</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* {mempool.map((block: any) => ( */}
-            <TableRow>
-              <DataTableCell>Public Key</DataTableCell>
-              <DataTableCell>Shard Key</DataTableCell>
-            </TableRow>
-            <TableRow>
-              <DataTableCell>Public Key</DataTableCell>
-              <DataTableCell>Shard Key</DataTableCell>
-            </TableRow>
-            <TableRow>
-              <DataTableCell>Public Key</DataTableCell>
-              <DataTableCell>Shard Key</DataTableCell>
-            </TableRow>
-            {/* ))} */}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <FetchStatusCheck
+        errorMessage="error"
+        isError={isError}
+        isLoading={isLoading}
+      />
+      {data?.activeVns.length === 0 && !isLoading && !isError ? (
+        <Alert severity="info">No active validator nodes</Alert>
+      ) : isMobile ? (
+        <Mobile />
+      ) : (
+        <Desktop />
+      )}
     </>
   );
 }

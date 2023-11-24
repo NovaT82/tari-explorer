@@ -20,62 +20,219 @@
 //  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 //  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import { Fragment } from 'react';
 import { useAllBlocks } from '../../api/hooks/useBlocks';
-import { DataTableCell, InnerHeading } from '../../components/StyledComponents';
 import {
-  TableContainer,
-  Table,
-  TableCell,
-  TableRow,
-  TableHead,
-  TableBody,
-} from '@mui/material';
+  InnerHeading,
+  TypographyData,
+} from '../../components/StyledComponents';
+import { Typography, Grid, Divider, Alert } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import FetchStatusCheck from '../../components/FetchStatusCheck';
+import { toHexString, shortenString } from '../../utils/helpers';
+import CopyToClipboard from '../../components/CopyToClipboard';
 
 function MempoolTable() {
-  const { data } = useAllBlocks();
-  console.log('mempool', data?.mempool);
+  const { data, isError, isLoading } = useAllBlocks();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  function Mobile() {
+    const col1 = 4;
+    const col2 = 8;
+
+    return (
+      <Grid container spacing={2} pl={2} pr={2}>
+        {data?.mempool.map((item: any, index: number) => (
+          <Fragment key={index}>
+            <Grid item xs={col1}>
+              <Typography variant="body2">Excess</Typography>
+            </Grid>
+            <Grid item xs={col2}>
+              <TypographyData>
+                {' '}
+                {shortenString(
+                  toHexString(item.transaction.body.signature.data)
+                )}
+                <CopyToClipboard
+                  copy={toHexString(item.transaction.body.signature.data)}
+                  key={`${index}-copy`}
+                />
+              </TypographyData>
+            </Grid>
+
+            <Grid item xs={col1}>
+              <Typography variant="body2">Total Fees</Typography>
+            </Grid>
+            <Grid item xs={col2}>
+              <TypographyData>
+                {item.transaction.body.total_fees}
+              </TypographyData>
+            </Grid>
+
+            <Grid item xs={col1}>
+              <Typography variant="body2">Outputs</Typography>
+            </Grid>
+            <Grid item xs={col2}>
+              <TypographyData>
+                {item.transaction.body.outputs.length}
+              </TypographyData>
+            </Grid>
+
+            <Grid item xs={col1}>
+              <Typography variant="body2">Kernels</Typography>
+            </Grid>
+            <Grid item xs={col2}>
+              <TypographyData>
+                {item.transaction.body.kernels.length}
+              </TypographyData>
+            </Grid>
+
+            <Grid item xs={col1}>
+              <Typography variant="body2">Inputs</Typography>
+            </Grid>
+            <Grid item xs={col2}>
+              <TypographyData>
+                {item.transaction.body.inputs.length}
+              </TypographyData>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider color={theme.palette.background.paper} />
+            </Grid>
+          </Fragment>
+        ))}
+      </Grid>
+    );
+  }
+
+  function Desktop() {
+    const col1 = 4;
+    const col2 = 2;
+    const col3 = 2;
+    const col4 = 2;
+    const col5 = 2;
+
+    return (
+      <>
+        <Grid container spacing={2} pl={2} pr={2} pb={2} pt={2}>
+          <Grid item xs={col1} md={col1} lg={col1}>
+            <Typography variant="body2">Excess</Typography>
+          </Grid>
+          <Grid item xs={col2} md={col2} lg={col2}>
+            <Typography variant="body2">Total Fees</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={col3}
+            md={col3}
+            lg={col3}
+            style={{ textAlign: 'center' }}
+          >
+            <Typography variant="body2">Outputs</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={col4}
+            md={col4}
+            lg={col4}
+            style={{ textAlign: 'center' }}
+          >
+            <Typography variant="body2">Kernels</Typography>
+          </Grid>
+          <Grid
+            item
+            xs={col5}
+            md={col5}
+            lg={col5}
+            style={{ textAlign: 'center' }}
+          >
+            <Typography variant="body2">Inputs</Typography>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} pl={2} pr={2} pb={2}>
+          {data?.mempool.map((item: any, index: number) => (
+            <Fragment key={index}>
+              <Grid item xs={12}>
+                <Divider color={theme.palette.background.paper} />
+              </Grid>
+              <Grid item xs={col1} md={col1} lg={col1}>
+                <TypographyData>
+                  {shortenString(
+                    toHexString(item.transaction.body.signature.data)
+                  )}
+                  <CopyToClipboard
+                    copy={toHexString(item.transaction.body.signature.data)}
+                    key={`${index}-copy`}
+                  />
+                </TypographyData>
+              </Grid>
+
+              <Grid item xs={col2} md={col2} lg={col2}>
+                <TypographyData>
+                  {item.transaction.body.total_fees}
+                </TypographyData>
+              </Grid>
+
+              <Grid
+                item
+                xs={col3}
+                md={col3}
+                lg={col3}
+                style={{ textAlign: 'center' }}
+              >
+                <TypographyData>
+                  {item.transaction.body.outputs.length}
+                </TypographyData>
+              </Grid>
+
+              <Grid
+                item
+                xs={col4}
+                md={col4}
+                lg={col4}
+                style={{ textAlign: 'center' }}
+              >
+                <TypographyData>
+                  {item.transaction.body.kernels.length}
+                </TypographyData>
+              </Grid>
+
+              <Grid
+                item
+                xs={col5}
+                md={col5}
+                lg={col5}
+                style={{ textAlign: 'center' }}
+              >
+                <TypographyData>
+                  {item.transaction.body.inputs.length}
+                </TypographyData>
+              </Grid>
+            </Fragment>
+          ))}
+        </Grid>
+      </>
+    );
+  }
 
   return (
     <>
       <InnerHeading>Mempool</InnerHeading>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Excess</TableCell>
-              <TableCell>Total Fees</TableCell>
-              <TableCell>Outputs</TableCell>
-              <TableCell>Kernels</TableCell>
-              <TableCell>Inputs</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {/* {mempool.map((block: any) => ( */}
-            <TableRow>
-              <DataTableCell>Excess</DataTableCell>
-              <DataTableCell>Total Fees</DataTableCell>
-              <DataTableCell>Outputs</DataTableCell>
-              <DataTableCell>Kernels</DataTableCell>
-              <DataTableCell>Inputs</DataTableCell>
-            </TableRow>
-            <TableRow>
-              <DataTableCell>Excess</DataTableCell>
-              <DataTableCell>Total Fees</DataTableCell>
-              <DataTableCell>Outputs</DataTableCell>
-              <DataTableCell>Kernels</DataTableCell>
-              <DataTableCell>Inputs</DataTableCell>
-            </TableRow>
-            <TableRow>
-              <DataTableCell>Excess</DataTableCell>
-              <DataTableCell>Total Fees</DataTableCell>
-              <DataTableCell>Outputs</DataTableCell>
-              <DataTableCell>Kernels</DataTableCell>
-              <DataTableCell>Inputs</DataTableCell>
-            </TableRow>
-            {/* ))} */}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <FetchStatusCheck
+        errorMessage="Error Message"
+        isError={isError}
+        isLoading={isLoading}
+      />
+      {data?.mempool.length === 0 && !isLoading && !isError ? (
+        <Alert severity="info">Mempool is empty</Alert>
+      ) : isMobile ? (
+        <Mobile />
+      ) : (
+        <Desktop />
+      )}
+      {/* {isMobile ? <Mobile /> : <Desktop />} */}
     </>
   );
 }

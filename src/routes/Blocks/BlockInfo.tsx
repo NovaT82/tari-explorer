@@ -20,6 +20,7 @@
 //  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 //  USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import { Fragment } from 'react';
 import { Grid, Divider, Typography } from '@mui/material';
 import {
   InnerHeading,
@@ -35,7 +36,7 @@ import CopyToClipboard from '../../components/CopyToClipboard';
 import { useTheme } from '@mui/material/styles';
 
 function BlockInfo({ blockHeight }: { blockHeight: any }) {
-  const { data, isLoading, error } = useGetBlockByHeight(blockHeight);
+  const { data } = useGetBlockByHeight(blockHeight);
   const theme = useTheme();
   const { header } = data ?? {};
   const items = [
@@ -117,7 +118,7 @@ function BlockInfo({ blockHeight }: { blockHeight: any }) {
       <Grid container spacing={2} pl={2} pr={2}>
         {items.map((item, index) =>
           item.copy ? (
-            <>
+            <Fragment key={index}>
               <Grid item xs={12} md={4} lg={4}>
                 <Typography variant="body2">{item.label}</Typography>
               </Grid>
@@ -130,9 +131,9 @@ function BlockInfo({ blockHeight }: { blockHeight: any }) {
               <Grid item xs={12}>
                 <Divider color={theme.palette.background.paper} />
               </Grid>
-            </>
+            </Fragment>
           ) : (
-            <>
+            <Fragment key={index}>
               <Grid item xs={12} md={4} lg={4}>
                 <Typography variant="body2">{item.label}</Typography>
               </Grid>
@@ -142,7 +143,7 @@ function BlockInfo({ blockHeight }: { blockHeight: any }) {
               <Grid item xs={12}>
                 <Divider color={theme.palette.background.paper} />
               </Grid>
-            </>
+            </Fragment>
           )
         )}
       </Grid>
